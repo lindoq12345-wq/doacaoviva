@@ -1,17 +1,62 @@
 const { Pool } = require('pg');
 const mongoose = require('mongoose');
 const DonationModel = require('./mongoDonation');
+const fs = require('fs/promises');
+const path = require('path');
 const crypto = require('crypto');
 
 const provider = process.env.DATABASE_PROVIDER || 'postgresql';
 const url = process.env.DATABASE_URL;
+const jsonDataPath = process.env.JSON_DATA_PATH || path.join('/tmp', 'doacaoviva-donations.json');
 
 let repository;
 let pool;
 
+async function ensureJsonFile() {
+  try {
+    await fs.access(jsonDataPath);
+  } catch {
+    await fs.mkdir(path.dirname(jsonDataPath), { recursive: true });
+    await fs.writeFile(jsonDataPath, '[]', 'utf8');
+  }
+}
+
+async function readJsonData() {
+  await ensureJsonFile();
+  const content = await fs.readFile(jsonDataPath, 'utf8');
+  return JSON.parse(content);
+}
+
+async function saveJsonData(items) {
+  await fs.writeFile(jsonDataPath, JSON.stringify(items, null, 2), 'utf8');
+}
+
 async function connect() {
   if (!url) {
-    throw new Error('DATABASE_URL é obrigatório. Configure .env com DATABASE_URL e DATABASE_PROVIDER.');
+    await ensureJsonFile();
+
+    repository = {
+      getAllDonations: async () => {
+        const items = await readJsonData();
+        return items.sort((a, b) => new Date(b.recebidoEm) - new Date(a.recebidoEm));
+      },
+      createDonation: async ({ nome, email, valor, mensagem }) => {
+        const items = await readJsonData();
+        const record = {
+          id: crypto.randomUUID(),
+          nome,
+          email,
+          valor,
+          mensagem: mensagem || '',
+          recebidoEm: new Date().toISOString()
+        };
+        items.unshift(record);
+        await saveJsonData(items);
+        return record;
+      }
+    };
+
+    return repository;
   }
 
   if (provider === 'mongodb') {

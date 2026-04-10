@@ -75,7 +75,8 @@ http://localhost:3000
 ## Backend completo
 
 - Validação de entrada com `express-validator`
-- Persistência real em PostgreSQL ou MongoDB
+- Persistência real em PostgreSQL ou MongoDB quando configurado
+- Fallback em arquivo JSON local no `/tmp` quando `DATABASE_URL` não estiver definido
 - Tratamento de erros de rota e servidor
 - Frontend integrado que consome a API
 
