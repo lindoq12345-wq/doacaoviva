@@ -1,0 +1,31 @@
+{
+  "name": "doacaoviva",
+  "version": "1.0.0",
+  "description": "Aplicação de doações com backend Node.js/Express e persistência em PostgreSQL ou MongoDB.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "doação",
+    "express",
+    "node",
+    "backend",
+    "postgresql",
+    "mongodb",
+    "database"
+  ],
+  "author": "doacaoviva",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.4",
+    "express-validator": "^7.0.1",
+    "mongoose": "^7.5.0",
+    "pg": "^8.11.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

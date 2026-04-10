@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: doacaoviva
+    env: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    env:
+      - key: DATABASE_PROVIDER
+      - key: DATABASE_URL
+      - key: PORT
