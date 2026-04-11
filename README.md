@@ -10,7 +10,7 @@ Aplicação de doações com frontend + backend em Node.js/Express.
 - `src/services/donationService.js` — camada de persistência com banco
 - `src/database/index.js` — adaptador de conexão para PostgreSQL ou MongoDB
 - `src/database/mongoDonation.js` — modelo Mongoose para MongoDB
-- `public/` — frontend do formulário
+- `public/` — frontend com múltiplas páginas: Home, Doar, Sobre e Contato
 - `.env.example` — exemplo de variáveis de ambiente
 - `Dockerfile` — imagem Docker para deploy
 
@@ -38,6 +38,12 @@ http://localhost:3000
 
 ```bash
 npm run dev
+```
+
+5. Rodar a suíte de testes automáticos:
+
+```bash
+npm test
 ```
 
 ## Rodando com Docker Compose
@@ -70,6 +76,8 @@ http://localhost:3000
 
 - `POST /api/donations` — cria uma nova doação
 - `GET /api/donations` — lista todas as doações
+- `POST /api/subscribers` — cadastra um e-mail na lista de interessados
+- `GET /api/subscribers` — lista os e-mails cadastrados
 - `GET /health` — health check do servidor
 
 ## Backend completo

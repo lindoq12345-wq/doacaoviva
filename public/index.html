@@ -1,80 +1,682 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Doação Viva</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DoacãoViva — Conectando corações</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --verde: #1a7a4a;
+    --verde-claro: #2da05f;
+    --verde-neon: #4effa0;
+    --terra: #c47c3a;
+    --creme: #f5f0e8;
+    --escuro: #0d1f12;
+    --texto: #1c2e1e;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--creme);
+    color: var(--texto);
+    overflow-x: hidden;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    background: var(--escuro);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 6vw;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 50%, rgba(26,122,74,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(78,255,160,0.08) 0%, transparent 60%);
+  }
+
+  .hero-orb {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    right: -80px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: radial-gradient(circle, rgba(78,255,160,0.18) 0%, rgba(26,122,74,0.12) 40%, transparent 70%);
+    border: 1px solid rgba(78,255,160,0.12);
+    animation: pulse 6s ease-in-out infinite;
+  }
+
+  .hero-orb::after {
+    content: '';
+    position: absolute;
+    inset: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(78,255,160,0.08);
+    animation: pulse 6s ease-in-out infinite reverse;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: translateY(-50%) scale(1); opacity: 1; }
+    50% { transform: translateY(-50%) scale(1.04); opacity: 0.7; }
+  }
+
+  nav {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 6vw;
+    z-index: 10;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  .logo span { color: var(--verde-neon); }
+
+  .nav-btn {
+    background: transparent;
+    border: 1px solid rgba(78,255,160,0.4);
+    color: var(--verde-neon);
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-btn:hover {
+    background: var(--verde-neon);
+    color: var(--escuro);
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(78,255,160,0.1);
+    border: 1px solid rgba(78,255,160,0.25);
+    color: var(--verde-neon);
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--verde-neon);
+    animation: blink 2s infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 7vw, 6rem);
+    color: #fff;
+    line-height: 1.05;
+    max-width: 700px;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--verde-neon);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.55);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .btn-primary {
+    background: var(--verde-neon);
+    color: var(--escuro);
+    border: none;
+    padding: 16px 36px;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(78,255,160,0.35);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 16px 36px;
+    border-radius: 100px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-secondary:hover {
+    border-color: rgba(255,255,255,0.5);
+    color: #fff;
+  }
+
+  /* números flutuantes */
+  .hero-stats {
+    position: absolute;
+    bottom: 48px;
+    left: 6vw;
+    display: flex;
+    gap: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .stat-item { }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #fff;
+    display: block;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── COMO FUNCIONA ─── */
+  .section {
+    padding: 120px 6vw;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--verde);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    color: var(--texto);
+    line-height: 1.15;
+    max-width: 560px;
+    margin-bottom: 72px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2px;
+    background: rgba(0,0,0,0.08);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  .step {
+    background: var(--creme);
+    padding: 48px 40px;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .step:hover { background: #fff; }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    color: rgba(0,0,0,0.06);
+    line-height: 1;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .step-icon {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .step h3 {
+    font-size: 1.15rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: var(--texto);
+  }
+
+  .step p {
+    font-size: 0.9rem;
+    color: rgba(0,0,0,0.5);
+    line-height: 1.7;
+  }
+
+  .step-accent {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--verde-neon);
+    transition: width 0.4s;
+  }
+
+  .step:hover .step-accent { width: 100%; }
+
+  /* ─── IMPACTO ─── */
+  .impact {
+    background: var(--escuro);
+    padding: 120px 6vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .impact::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    left: -200px; top: -200px;
+    background: radial-gradient(circle, rgba(26,122,74,0.2) 0%, transparent 60%);
+  }
+
+  .impact .section-label { color: var(--verde-neon); }
+  .impact .section-title { color: #fff; }
+
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .impact-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .hero-stats { gap: 28px; }
+  }
+
+  .impact-card {
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .impact-card:hover {
+    border-color: rgba(78,255,160,0.25);
+    transform: translateY(-4px);
+  }
+
+  .impact-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(78,255,160,0.04) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .impact-card:hover::before { opacity: 1; }
+
+  .impact-emoji { font-size: 2.5rem; margin-bottom: 24px; display: block; }
+
+  .impact-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .impact-card p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.7;
+  }
+
+  /* ─── CTA FINAL ─── */
+  .cta-section {
+    padding: 140px 6vw;
+    text-align: center;
+    background: var(--creme);
+    position: relative;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    width: 800px; height: 400px;
+    background: radial-gradient(ellipse, rgba(26,122,74,0.08) 0%, transparent 70%);
+    left: 50%; top: 50%;
+    transform: translate(-50%,-50%);
+  }
+
+  .cta-section .section-title {
+    max-width: 700px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  .email-form {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .email-form input {
+    padding: 16px 24px;
+    border-radius: 100px;
+    border: 1.5px solid rgba(0,0,0,0.12);
+    background: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    width: 320px;
+    max-width: 100%;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .email-form input:focus {
+    border-color: var(--verde);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--escuro);
+    padding: 48px 6vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  footer .logo { font-size: 1.2rem; }
+
+  footer p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── SUCCESS MSG ─── */
+  .success-msg {
+    display: none;
+    color: var(--verde);
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 16px 32px;
+    background: rgba(26,122,74,0.1);
+    border-radius: 100px;
+    border: 1px solid rgba(26,122,74,0.2);
+  }
+</style>
 </head>
 <body>
-  <main class="container">
-    <section class="card">
-      <h1>Doação Viva</h1>
-      <p>Envie sua contribuição com segurança. Este formulário envia os dados ao backend Node.js/Express.</p>
 
-      <form id="donation-form">
-        <label for="nome">Nome completo</label>
-        <input type="text" id="nome" name="nome" required />
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb"></div>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required />
+  <nav>
+    <div class="logo">Doação<span>Viva</span></div>
+    <a class="nav-btn" href="donate.html">Doar agora</a>
+  </nav>
 
-        <label for="valor">Valor da doação</label>
-        <input type="number" id="valor" name="valor" min="1" step="0.01" required />
+  <div class="hero-tag">🌱 Plataforma de impacto social</div>
 
-        <label for="mensagem">Mensagem (opcional)</label>
-        <textarea id="mensagem" name="mensagem" rows="4" placeholder="Deixe uma mensagem..."></textarea>
+  <h1 class="hero-title">
+    Conectando<br>
+    <em>corações</em><br>
+    que ajudam.
+  </h1>
 
-        <button type="submit">Enviar doação</button>
-      </form>
+  <p class="hero-sub">
+    Uma ponte direta entre quem quer doar e quem precisa de ajuda. Sem burocracia, sem intermediários. Só pessoas cuidando de pessoas.
+  </p>
 
-      <div id="feedback" role="status" aria-live="polite"></div>
-    </section>
-  </main>
+  <div class="hero-ctas">
+    <a class="btn-primary" href="donate.html">Quero doar</a>
+    <button class="btn-secondary" onclick="document.querySelector('#como').scrollIntoView({behavior:'smooth'})">Como funciona →</button>
+  </div>
 
-  <script>
-    const form = document.getElementById('donation-form');
-    const feedback = document.getElementById('feedback');
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">33M+</span>
+      <span class="stat-label">Pessoas em situação de fome no Brasil</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">0</span>
+      <span class="stat-label">Intermediários na nossa plataforma</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">Da doação chega ao destino</span>
+    </div>
+  </div>
+</section>
 
-    form.addEventListener('submit', async (event) => {
+<!-- COMO FUNCIONA -->
+<section class="section" id="como">
+  <div class="reveal">
+    <p class="section-label">Como funciona</p>
+    <h2 class="section-title">Simples como ajudar deveria ser</h2>
+  </div>
+
+  <div class="steps reveal">
+    <div class="step">
+      <span class="step-num">01</span>
+      <span class="step-icon">📋</span>
+      <h3>Cadastre sua necessidade</h3>
+      <p>Quem precisa de ajuda cria um perfil com sua história e o que necessita — alimentos, roupas, medicamentos, trabalho.</p>
+      <div class="step-accent"></div>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <span class="step-icon">🔍</span>
+      <h3>Doadores encontram</h3>
+      <p>Quem quer ajudar filtra por localização, tipo de necessidade e urgência. Vê rostos reais, histórias reais.</p>
+      <div class="step-accent"></div>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <span class="step-icon">🤝</span>
+      <h3>Conexão direta</h3>
+      <p>Doador e receptor se conectam diretamente pelo app. Combinam a entrega. Sem desvio, sem demora.</p>
+      <div class="step-accent"></div>
+    </div>
+    <div class="step">
+      <span class="step-num">04</span>
+      <span class="step-icon">⭐</span>
+      <h3>Reputação e confiança</h3>
+      <p>Avaliações mútuas constroem confiança na comunidade. Bons doadores e receptores ganham destaque.</p>
+      <div class="step-accent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACTO -->
+<section class="impact">
+  <div class="reveal">
+    <p class="section-label">Por que isso importa</p>
+    <h2 class="section-title">O mundo tem recursos.<br>Falta conexão.</h2>
+  </div>
+
+  <div class="impact-grid reveal">
+    <div class="impact-card">
+      <span class="impact-emoji">🍽️</span>
+      <h3>Alimentos</h3>
+      <p>Conectamos quem tem excedente de comida com famílias que precisam. Do mercado ao vizinho, da horta à mesa.</p>
+    </div>
+    <div class="impact-card">
+      <span class="impact-emoji">👕</span>
+      <h3>Roupas & Itens</h3>
+      <p>Roupas, móveis, eletrodomésticos — o que não usa mais pode transformar a vida de outra família.</p>
+    </div>
+    <div class="impact-card">
+      <span class="impact-emoji">💼</span>
+      <h3>Oportunidades</h3>
+      <p>Serviços, trabalho, cursos gratuitos. Conectamos talentos com quem precisa deles — gerando renda e dignidade.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <div class="reveal">
+    <p class="section-label">Acesso antecipado</p>
+    <h2 class="section-title">
+      Seja um dos primeiros a<br>
+      <em style="font-style:italic; color:var(--verde)">mudar essa história.</em>
+    </h2>
+
+    <form class="email-form" id="newsletterForm">
+      <input type="email" placeholder="Seu melhor e-mail" id="emailInput" name="email" required>
+      <button type="submit" class="btn-primary">Quero participar</button>
+    </form>
+    <div class="success-msg" id="successMsg" role="status" aria-live="polite">
+      🌱 Incrível! Você está na lista. Avisaremos assim que lançarmos!
+    </div>
+    <p style="margin-top:20px; font-size:0.8rem; color:rgba(0,0,0,0.35);">Sem spam. Só novidades que importam.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Doação<span style="color:var(--verde-neon)">Viva</span></div>
+  <p>Feito com propósito. Para quem precisa.</p>
+  <p style="color:rgba(255,255,255,0.2); font-size:0.75rem;">© 2025 DoacãoViva</p>
+</footer>
+
+<script>
+    const apiBaseUrl = 'https://doacaoviva-1.onrender.com';
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 100);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Form submit
+    const newsletterForm = document.getElementById('newsletterForm');
+    const emailInput = document.getElementById('emailInput');
+    const successMsg = document.getElementById('successMsg');
+
+    function showMessage(message, isError = false) {
+      successMsg.textContent = message;
+      successMsg.style.display = 'inline-block';
+      successMsg.style.background = isError ? 'rgba(255,230,230,0.95)' : 'rgba(26,122,74,0.1)';
+      successMsg.style.color = isError ? '#991b1b' : 'var(--verde)';
+    }
+
+    newsletterForm.addEventListener('submit', async (event) => {
       event.preventDefault();
-      feedback.textContent = '';
+      successMsg.style.display = 'none';
+      emailInput.style.borderColor = '';
 
-      const formData = new FormData(form);
-      const payload = {
-        nome: formData.get('nome'),
-        email: formData.get('email'),
-        valor: formData.get('valor'),
-        mensagem: formData.get('mensagem')
-      };
+      const email = emailInput.value.trim();
+      if (!email || !email.includes('@')) {
+        emailInput.style.borderColor = '#e05';
+        showMessage('Digite um e-mail válido.', true);
+        return;
+      }
 
       try {
-        const response = await fetch('/api/donations', {
+        const response = await fetch(`${apiBaseUrl}/api/subscribers`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({ email })
         });
 
-        const result = await response.json();
+        const data = await response.json();
 
         if (!response.ok) {
-          const errorText = result.errors
-            ? result.errors.map((error) => error.msg).join(' ')
-            : result.error || 'Ocorreu um problema ao enviar o formulário.';
-          feedback.textContent = errorText;
-          feedback.className = 'feedback error';
+          const message = data.error || (data.errors ? data.errors.map((error) => error.msg).join(' ') : 'Erro ao cadastrar o e-mail.');
+          showMessage(message, true);
           return;
         }
 
-        feedback.textContent = result.message;
-        feedback.className = 'feedback success';
-        form.reset();
+        emailInput.value = '';
+        showMessage(data.message || 'Seu e-mail foi cadastrado com sucesso.');
       } catch (error) {
-        feedback.textContent = 'Erro de rede. Tente novamente mais tarde.';
-        feedback.className = 'feedback error';
         console.error(error);
+        showMessage('Erro de rede. Tente novamente mais tarde.', true);
       }
     });
   </script>
-</body>
 </html>

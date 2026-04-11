@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const donationsRouter = require('./routes/donations');
+const subscribersRouter = require('./routes/subscribers');
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use('/api/donations', donationsRouter);
+app.use('/api/subscribers', subscribersRouter);
 
 app.get('/health', (req, res) => {
   res.send('OK');
